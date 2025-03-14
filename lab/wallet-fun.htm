@@ -1,0 +1,54 @@
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>UNFOUNDED</title>
+	<link href="/style.css" rel="stylesheet" />
+</head>
+<body>
+<div id="game-container">
+  <h2>UNFOUNDED &mdash; LAB</h2>
+  <h3> Web3 Playground </h3>
+
+  <p class="lead mb-3">
+	Demo: Interact with the a crypto wallet with JavaScript.
+  </p>
+
+  <div class="row mb-3">
+	<button type="button" class="btn ConnectButton"> Click to Connect </button>
+  </div>
+
+  <div class="row mb-3">
+	<button type="button" class="btn SignButton disabled" > Sign a message </button>
+  </div>
+
+  <div class="row mb-3">
+	<button type="button" class="btn MintButton disabled" > Mint a Token </button>
+  </div>
+
+  <div class="row mb-3">
+	<button type="button" class="btn DonateButton disabled" > Make a Donation </button>
+  </div>
+
+  <br />
+  <a href="/lab/index.htm" class="text-white">Back</a>
+</div>
+<script type="text/JavaScript" src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+<script type="text/JavaScript" src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.5/ethers.umd.min.js"></script>
+<script type="text/JavaScript" src="/scripts/cryptotools.js"></script>
+<script type="text/Javascript">
+
+	$(".ConnectButton").on("click", function () {
+		crypt.requestWalletConnect
+	});
+
+	$(document).ready(function () {
+		crypt.testWalletConnection(function (accounts) {
+			console.log(`You have ${accounts.length} account(s) connected`);
+		}, function () {
+			console.log("You have no accounts connected");
+		});
+	});
+	
+</script>
+</body>
+</html>
