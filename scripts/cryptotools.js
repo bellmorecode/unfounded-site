@@ -21,6 +21,7 @@ var crypt = {
         if (id == "0x2105") { return "Base"; }
         if (id == "0x13882") { return "Polygon (amoy/test)"; }
         if (id == "0x14a34") { return "base-sepolia"; }
+        if (id == "0x8173") { return "Apechain"; }
         return id;
     },
 	chainHandle: function (id) {
@@ -36,6 +37,7 @@ var crypt = {
         if (id == "0x2105") { return "base"; }
         if (id == "0x13882") { return "pol-amoy"; }
         if (id == "0x14a34") { return "base-sepolia"; }
+        if (id == "0x8173") { return "ape"; }
         return id;
     },
 	maskedAddress: function (addr) {
@@ -48,7 +50,7 @@ var crypt = {
         return addr;
     },
     chains: {
-        Ethereum: "0x1", Polygon: "0x89", PolygonAmoy: "0x13882", Base: "0x2105", BaseSepolia: "0x14a34", Sepolia: "0xaa36a7", ShapeSepolia: ""
+        Ethereum: "0x1", Polygon: "0x89", PolygonAmoy: "0x13882", Base: "0x2105", BaseSepolia: "0x14a34", Sepolia: "0xaa36a7", ApeChain: "0x8173"
     },
     testChains: {
         BaseSepolia: "0x14a34", Sepolia: "0xaa36a7", PolygonAmoy: "0x13882"
@@ -107,5 +109,27 @@ var crypt = {
 		} else {
 			alert('Please install a cryptowallet browser plugin.');
 		}
-	}
+	},
+    sendEthToAddress: function (addr, amount, callback) {
+        if (window.ethereum) {
+            try {
+                let eth = window.ethereum;
+                let provider = new ethers.BrowserProvider(eth);
+                console.log({ provider });
+                provider.getSigner().then( signer => {
+                    console.log({ provider, signer });
+                    let tx = signer.sendTransaction({to:addr, value:ethers.parseEther(amount) });
+                    if (callback) {
+                        tx.then(callback);  
+                    } else {
+                        tx.then(function (a) { console.log({a}); });
+                    }
+                });
+                
+            } catch (err) {
+               console.log({donateError: err});
+               alert('sorry. something went wrong.');
+            }
+        }
+    }
 }

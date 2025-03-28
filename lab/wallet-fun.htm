@@ -18,17 +18,22 @@
   </div>
 
   <div class="row mb-3">
-	<button type="button" class="btn SignButton disabled" > Sign a message </button>
+	<h5> Wallet Details </h5>
+
+	<div class="output"></div>
   </div>
 
-  <div class="row mb-3">
-	<button type="button" class="btn MintButton disabled" > Mint a Token </button>
+  <div class="row mb-3 d-none">
+	<button type="button" class="btn SignButton disabled" > Sign a message </button>
   </div>
 
   <div class="row mb-3">
 	<button type="button" class="btn DonateButton disabled" > Make a Donation </button>
   </div>
-
+  
+  <div class="row mb-3 d-none">
+	<button type="button" class="btn MintButton disabled" > Mint a Token </button>
+  </div>
   <br />
   <a href="/lab/index.htm" class="text-white">Back</a>
 </div>
@@ -36,14 +41,45 @@
 <script type="text/JavaScript" src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.5/ethers.umd.min.js"></script>
 <script type="text/JavaScript" src="/scripts/cryptotools.js"></script>
 <script type="text/Javascript">
-
+	var userWallet = "0x0";
 	$(".ConnectButton").on("click", function () {
-		crypt.requestWalletConnect
+		crypt.requestWalletConnect(
+			function (accounts) {
+				userWallet = accounts[0];
+				$(".MintButton").removeClass("disabled");
+				$(".DonateButton").removeClass("disabled");
+				$(".ConnectButton").addClass("disabled");
+				let walletInfo = userWallet + "<br/>chain: " + crypt.chainName(window.ethereum.chainId);
+				$(".output").text(walletInfo);
+			}, function () {
+				alret('no bueno');
+			}
+		)
+	});
+
+	$(".DonateButton").on("click", function () {
+		crypt.sendEthToAddress('0x638d58F5270329360031EeC235309bDedDe5645d', '0.0001');	
+	});
+
+	crypt.subscribeToChainEvents( function (accounts) {
+		userWallet = accounts[0];
+		let walletInfo = userWallet + ", chain: " + crypt.chainName(window.ethereum.chainId);
+		$(".output").text(walletInfo);
+	}, function (chainId) {
+		let walletInfo = userWallet + ", chain: " + crypt.chainName(window.ethereum.chainId);
+		$(".output").text(walletInfo);
 	});
 
 	$(document).ready(function () {
-		crypt.testWalletConnection(function (accounts) {
-			console.log(`You have ${accounts.length} account(s) connected`);
+		crypt.testWalletConnection(function (accounts) {	
+			userWallet = accounts[0];
+				$(".MintButton").removeClass("disabled");
+				$(".DonateButton").removeClass("disabled");
+				$(".ConnectButton").addClass("disabled");
+				let walletInfo = userWallet + ", chain: " + crypt.chainName(window.ethereum.chainId);
+
+				$(".output").text(walletInfo);
+
 		}, function () {
 			console.log("You have no accounts connected");
 		});
